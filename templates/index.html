@@ -6,7 +6,41 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Stock Graph</h1>
-    <img src ="chart.svg" alt="Stock Chart">
+    <h1>Stock Graph Form</h1>
+    <form action="/submit" method="post">
+        <label for="symbol">Stock Symbol:</label>
+        <input type="text" id="symbol" name="symbol" required>
+
+        <label for="timeSeries">Time Series:</label>
+        <select id="timeSeries" name="timeSeries" required>
+            <option value="INTRADAY">Intraday</option>
+            <option value="DAILY">Daily</option>
+            <option value="WEEKLY">Weekly</option>
+            <option value="MONTHLY">Monthly</option>
+        </select>
+
+        <label for="chartType">Chart Type:</label>
+        <select id="chartType" name="chartType" required>
+            <option value="Bar">Bar</option>
+            <option value="Line">Line</option>
+        </select>
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required>
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required>
+
+        <button type="submit">Generate Graph</button>
+    </form>
+    
+    {% if chart_exists %}
+        <h1>Stock Graph</h1>
+        <div id="chart-container">
+            <img src ="/static/chart.svg" alt="Stock Chart">
+        </div>
+    {% endif %}
+
+    
 </body>
 </html>
