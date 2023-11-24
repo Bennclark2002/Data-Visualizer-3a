@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, abort, send_file
+from datetime import datetime
 import generate_graph
 import os
+import csv
+
+
 
 
 # This is bad code and only allows one person to use the server at a time, the reqs dosent say to fix this will work later
@@ -33,9 +37,18 @@ def submit():
 #landing page where they are initilly given the choices for their graph
 @app.route('/')
 def home():
+    # Read the csv file then get the row of stock symbols
+    with open('stocks.csv', 'r')as file:
+        symbols = [row['Symbol'] for row in csv.DictReader(file)]
+
     # Check if the chart file exists
     chart_exists = os.path.exists('static/chart.svg')
-    return render_template('index.html', chart_exists=chart_exists)
+    
+    # this is the date used to limit the html input value
+    now = datetime.now().strftime('%Y-%m-%d')
+
+    # no idea why but setting it to be itself fixed an issue
+    return render_template('index.html', symbols=symbols ,chart_exists=chart_exists, now=now)
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

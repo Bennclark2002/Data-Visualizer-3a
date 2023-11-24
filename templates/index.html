@@ -8,8 +8,13 @@
 <body>
     <h1>Stock Graph Form</h1>
     <form action="/submit" method="post">
+
         <label for="symbol">Stock Symbol:</label>
-        <input type="text" id="symbol" name="symbol" required>
+        <select id="symbol" name="symbol" required>
+            {% for symbol in symbols %}
+                <option value="{{ symbol }}">{{ symbol }}</option>
+            {% endfor %}
+        </select>
 
         <label for="timeSeries">Time Series:</label>
         <select id="timeSeries" name="timeSeries" required>
@@ -21,17 +26,30 @@
 
         <label for="chartType">Chart Type:</label>
         <select id="chartType" name="chartType" required>
-            <option value="Bar">Bar</option>
             <option value="Line">Line</option>
+            <option value="Bar">Bar</option>
         </select>
 
         <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" name="startDate" required>
+        <input type="date" id="startDate" name="startDate" 
+            required min="2000-01-01" max="{{ now }}"
+            onchange="setEndDateMin(this.value)"
+        >
 
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" required>
+        <input type="date" id="endDate" name="endDate" required
+        min="{{ startDate }}" max="{{ now }}"
+        >
 
-        <button type="submit">Generate Graph</button>
+        <!-- script to handle dynamically updating the end date min value to be startdate value -->
+        <script>
+            function setEndDateMin(startDate){
+                document.getElementById("endDate").min = startDate
+                // ahhh javascript how i miss you <3
+            }
+        </script>
+        
+            <button type="submit">Generate Graph</button>
     </form>
     
     {% if chart_exists %}

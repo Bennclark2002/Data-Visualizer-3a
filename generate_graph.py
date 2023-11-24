@@ -17,10 +17,13 @@ def main(symbol,time_series,chart_type,start_date,end_date):
     r = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_{time_series}&symbol={symbol}&outputsize=full&month={api_timeframe}&interval=5min&apikey=V33ZAOO7VB64CV9C')
     all_data = r.json()
     data = Get_data_sorted(time_series,all_data)
+    
     # switch statement since the json is diffrennt depending on time series
 
     Graph(symbol,time_series,chart_type,start_date,end_date,start_date_2,data)
 def Get_data_sorted(time_series,all_data):
+    # if "Error Message" in all_data:
+    #     return []
     match time_series:
         case "DAILY":
             return all_data["Time Series (Daily)"]
@@ -71,7 +74,7 @@ def Graph(symbol,time_series,chart_type,start_date,end_date,start_date_2,data):
     #changing foramt to datetime
 
     
-    # chart.range = [graph_min,graph_max]
+    chart.range = [graph_min,graph_max]
     chart.render_to_file('static/chart.svg') # finalizes the graph 
 
     return chart.render_response() # save this chart somewhere else
@@ -124,5 +127,9 @@ def extract_y_axis(time_series,data,datetime_array):
         if graph_min > float(data[newKey]["3. low"]):
             graph_min = float(data[newKey]["3. low"])
 
+    # fixes bug with the stock symbol being wrong
+    if(graph_max == -float('inf') or graph_min == float('inf')):
+        graph_min = 0
+        graph_max = 0
 
     return  graph_min, graph_max, open_array, high_array, low_array, close_array 
