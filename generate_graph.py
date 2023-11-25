@@ -22,8 +22,9 @@ def main(symbol,time_series,chart_type,start_date,end_date):
 
     Graph(symbol,time_series,chart_type,start_date,end_date,start_date_2,data)
 def Get_data_sorted(time_series,all_data):
-    # if "Error Message" in all_data:
-    #     return []
+    if "Error Message" in all_data:
+        print('boop')
+        return []
     match time_series:
         case "DAILY":
             return all_data["Time Series (Daily)"]
